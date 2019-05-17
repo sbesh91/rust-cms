@@ -13,7 +13,7 @@ fn index() -> &'static str {
 fn main() {
     let e = rocket::ignite()
         .mount("/", routes![index, other::some])
-        .register(catchers![catchers::not_found])
+        .register(catchers![catchers::not_found, catchers::internal_server_error])
         .launch();
 
     println!("Whoops! Rocket didn't launch!");

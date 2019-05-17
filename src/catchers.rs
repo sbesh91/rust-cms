@@ -6,3 +6,8 @@ pub fn not_found(req: &rocket::Request) -> content::Html<String> {
             <a href=\"/\">Return Home</a>",
             req.uri()))
 }
+
+#[catch(500)]
+pub fn internal_server_error(req: &rocket::Request) -> content::Html<String> {
+  content::Html(format!("<p>Internal Server Error '{}' </p>", req.uri()))
+}
