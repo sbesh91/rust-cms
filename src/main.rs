@@ -4,6 +4,7 @@
 
 mod other;
 mod catchers;
+mod auth;
 
 #[get("/")]
 fn index() -> &'static str {
@@ -12,8 +13,7 @@ fn index() -> &'static str {
 
 fn main() {
     let e = rocket::ignite()
-        .mount("/", routes![index, other::some])
-        .mount("/", routes![other::blah])
+        .mount("/", routes![index, auth::authenticate])
         .register(catchers![catchers::not_found, catchers::internal_server_error])
         .launch();
 

@@ -4,5 +4,15 @@ version = "0.1.0"
 authors = ["Steven Beshensky <s.beshensky@gmail.com>"]
 edition = "2018"
 
+[global.limits]
+json = 5242880
+
 [dependencies]
 rocket = "0.4.1"
+serde = { version = "1.0.91", features = ["derive"] }
+log = "0.4.6"
+
+[dependencies.rocket_contrib]
+version = "0.4.1"
+default-features = false
+features = ["json", "helmet"]
