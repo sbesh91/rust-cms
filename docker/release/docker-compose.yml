@@ -1,0 +1,22 @@
+version: '3.1'
+services: 
+  
+  db:
+    image: postgres:11.3
+    container_name: cms_db
+    restart: always
+    volumes:
+      - cms_db:/var/lib/
+    environment:
+      POSTGRES_PASSWORD: root
+
+  cache:
+    image: redis:5
+    container_name: cms_cache
+    volumes:
+      - deploy-api-cache:/var/lib/redis
+
+
+volumes:
+  cms_db_data:
+  cms_cache_data:

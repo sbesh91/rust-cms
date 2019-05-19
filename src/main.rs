@@ -1,22 +1,14 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
 #[macro_use] extern crate rocket;
+#[macro_use] extern crate diesel;
+extern crate dotenv;
 
-mod other;
-mod catchers;
-mod auth;
-
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
-}
+pub mod endpoints;
+use dotenv::dotenv;
 
 fn main() {
-    let e = rocket::ignite()
-        .mount("/", routes![index, auth::authenticate])
-        .register(catchers![catchers::not_found, catchers::internal_server_error])
-        .launch();
+    dotenv().ok();
 
-    println!("Whoops! Rocket didn't launch!");
-    println!("This went wrong: {}", e);
+    endpoints::run();
 }
