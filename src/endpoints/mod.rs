@@ -1,18 +1,14 @@
 pub mod catchers;
 pub mod auth;
 pub mod lib;
-
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
-}
+pub mod users;
 
 pub fn run() {
-    lib::establish_connection();
-    println!("DB connection started \n");
-    
     let e = rocket::ignite()
-        .mount("/", routes![index, auth::authenticate])
+        .mount("/", routes![
+            auth::authenticate,
+            users::add, users::get,
+        ])
         .register(catchers![catchers::not_found, catchers::internal_server_error])
         .launch();
 

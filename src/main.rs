@@ -2,6 +2,7 @@
 
 #[macro_use] extern crate rocket;
 #[macro_use] extern crate diesel;
+extern crate bcrypt;
 extern crate dotenv;
 
 pub mod endpoints;
