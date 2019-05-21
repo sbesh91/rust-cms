@@ -1,4 +1,4 @@
-use super::lib::models::{User, AddUserForm, AddUserDB};
+use super::lib::models::{User, PublicUser, AddUserForm, AddUserDB};
 use super::lib;
 use rocket_contrib::json::Json;
 
@@ -7,7 +7,6 @@ use diesel::pg::PgConnection;
 use crate::diesel::RunQueryDsl;
 use crate::diesel::ExpressionMethods;
 use crate::diesel::QueryDsl;
-use crate::diesel::SelectDsl;
 use bcrypt::{DEFAULT_COST, hash};
 use super::lib::schema::users;
 
@@ -32,16 +31,26 @@ fn create(add_user: AddUserForm, connection: &PgConnection) -> User {
 }
 
 #[get("/users/<id>")]
-pub fn get(id: i32) -> Json<Vec<User>> {
+pub fn get(id: i32) -> Json<PublicUser> {
   let connection = lib::establish_connection();
 
-  return Json(find(id, &connection));
+  return Json(find_public(id, &connection));
 }
 
-fn find(id: i32, connection: &PgConnection) -> Vec<User> {
+fn find_public(id: i32, connection: &PgConnection) -> PublicUser {
+
+  let results = users::table
+    .filter(users::id.eq(id))
+    .select((users::id, users::account_name))
+    .first::<PublicUser>(connection)
+    .expect("Error loading user");
+
+  return results;
+}
+
+fn find_private(id: i32, connection: &PgConnection) -> Vec<User> {
 
   let results = users::table.filter(users::id.eq(id))
-    // todo: remove password hash if responding over web
     .load::<User>(connection)
     .expect("Error loading user");
 

@@ -9,6 +9,12 @@ pub struct User {
   pub password_hash: String,
 }
 
+#[derive(Queryable, Serialize, Deserialize)]
+pub struct PublicUser {
+  pub id: i32,
+  pub account_name: String,
+}
+
 #[derive(Deserialize)]
 pub struct AddUserForm {
   pub account_name: String,
