@@ -1,4 +1,4 @@
-use super::lib::models::{User, PublicUser, AddUserForm, AddUserDB};
+use super::lib::models::{User, PublicUser, UserTrait, AddUserForm, AddUserDB};
 use super::lib;
 use rocket_contrib::json::Json;
 
@@ -33,11 +33,17 @@ fn create(add_user: AddUserForm, connection: &PgConnection) -> User {
 #[get("/users/<id>")]
 pub fn get(id: i32) -> Json<PublicUser> {
   let connection = lib::establish_connection();
+  let result: PublicUser = find_http(id, &connection);
+  println!("{}", result.account());
 
-  return Json(find_public(id, &connection));
+  let name: String = "sbesh91".to_string();
+  let other_result: User = find_internal(name, &connection);
+  println!("{}", other_result.account());
+
+  return Json(result);
 }
 
-fn find_public(id: i32, connection: &PgConnection) -> PublicUser {
+fn find_http(id: i32, connection: &PgConnection) -> PublicUser {
 
   let results = users::table
     .filter(users::id.eq(id))
@@ -48,11 +54,12 @@ fn find_public(id: i32, connection: &PgConnection) -> PublicUser {
   return results;
 }
 
-fn find_private(id: i32, connection: &PgConnection) -> Vec<User> {
+pub fn find_internal(account_name: String, connection: &PgConnection) -> User {
 
-  let results = users::table.filter(users::id.eq(id))
-    .load::<User>(connection)
+  let result = users::table
+    .filter(users::account_name.eq(account_name))
+    .first::<User>(connection)
     .expect("Error loading user");
 
-  return results;
+  return result;
 }
