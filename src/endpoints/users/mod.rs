@@ -1,5 +1,6 @@
 use super::lib::models::{User, PublicUser, AddUserForm, AddUserDB};
 use super::lib;
+use super::auth::{JWT};
 use rocket_contrib::json::Json;
 
 // todo: split out data access from http methods
@@ -12,7 +13,7 @@ use super::lib::schema::users;
 
 
 #[post("/users", format = "json", data = "<add_user>")]
-pub fn add(add_user: Json<AddUserForm>) -> Json<User> {
+pub fn add(add_user: Json<AddUserForm>, _key: JWT) -> Json<User> {
   let connection = lib::establish_connection();
 
   return Json(create(add_user.into_inner(), &connection))
@@ -31,7 +32,7 @@ fn create(add_user: AddUserForm, connection: &PgConnection) -> User {
 }
 
 #[get("/users/<id>")]
-pub fn get(id: i32) -> Json<PublicUser> {
+pub fn get(id: i32, _key: JWT) -> Json<PublicUser> {
   let connection = lib::establish_connection();
 
   return Json(find_http(id, &connection));

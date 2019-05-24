@@ -6,6 +6,10 @@ use user_auth::UserAuth;
 use rocket_contrib::json::Json;
 use bcrypt::{verify};
 use frank_jwt::{Algorithm, encode, decode, validate_signature};
+use rocket::Outcome;
+use rocket::http::Status;
+use rocket::request::{self, Request, FromRequest};
+
 
 #[post("/authenticate", format = "json", data = "<auth>")]
 pub fn authenticate(auth: Json<UserAuth>) -> String {
@@ -47,4 +51,28 @@ pub fn validate_authorization(jwt: &String) -> bool {
 
   validate_signature(jwt, &secret, Algorithm::HS256)
     .expect("JWT validation failed")
+}
+
+#[derive(Debug)]
+pub enum AuthorizationError {
+  BadRequest,
+  Missing,
+  Invalid,
+}
+
+pub struct JWT(String);
+
+impl<'a, 'r> FromRequest<'a, 'r> for JWT {
+    type Error = AuthorizationError;
+
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<Self, Self::Error> {
+        let keys: Vec<_> = request.headers().get("Authorization").collect();
+        
+        match keys.len() {
+            0 => Outcome::Failure((Status::BadRequest, AuthorizationError::Missing)),
+            1 if validate_authorization(&keys[0].to_string()) => Outcome::Success(JWT(keys[0].to_string())),
+            1 => Outcome::Failure((Status::BadRequest, AuthorizationError::Invalid)),
+            _ => Outcome::Failure((Status::BadRequest, AuthorizationError::BadRequest)),
+        }
+    }
 }
