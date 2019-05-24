@@ -1,4 +1,4 @@
-use super::lib::models::{User, PublicUser, UserTrait, AddUserForm, AddUserDB};
+use super::lib::models::{User, PublicUser, AddUserForm, AddUserDB};
 use super::lib;
 use rocket_contrib::json::Json;
 
@@ -33,14 +33,8 @@ fn create(add_user: AddUserForm, connection: &PgConnection) -> User {
 #[get("/users/<id>")]
 pub fn get(id: i32) -> Json<PublicUser> {
   let connection = lib::establish_connection();
-  let result: PublicUser = find_http(id, &connection);
-  println!("{}", result.account());
 
-  let name: String = "sbesh91".to_string();
-  let other_result: User = find_internal(name, &connection);
-  println!("{}", other_result.account());
-
-  return Json(result);
+  return Json(find_http(id, &connection));
 }
 
 fn find_http(id: i32, connection: &PgConnection) -> PublicUser {

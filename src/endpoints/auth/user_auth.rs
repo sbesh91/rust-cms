@@ -1,7 +1,7 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize};
 
 #[derive(Deserialize)]
 pub struct UserAuth {
-  name: String,
-  password: String,
+  pub account_name: String,
+  pub password: String,
 }

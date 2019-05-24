@@ -10,10 +10,12 @@ json = 5242880
 [dependencies]
 rocket = "0.4.1"
 serde = { version = "1.0.91", features = ["derive"] }
+serde_json = "1.0.39"
 log = "0.4.6"
 diesel = { version = "1.4.2", features = ["postgres"] }
 dotenv = "0.14.1"
 bcrypt = "0.4"
+frank_jwt = "3.1.1"
 
 [dependencies.rocket_contrib]
 version = "0.4.1"

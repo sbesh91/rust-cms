@@ -2,6 +2,8 @@
 
 #[macro_use] extern crate rocket;
 #[macro_use] extern crate diesel;
+#[macro_use] extern crate serde_json;
+extern crate frank_jwt;
 extern crate bcrypt;
 extern crate dotenv;
 
