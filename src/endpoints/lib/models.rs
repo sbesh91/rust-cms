@@ -1,6 +1,9 @@
 use serde::{Serialize, Deserialize};
 use diesel::{Queryable, Insertable};
 use super::schema::users;
+use super::schema::sections;
+
+// users
 
 #[derive(Queryable, Serialize, Deserialize)]
 pub struct User {
@@ -44,4 +47,21 @@ pub struct AddUserForm {
 pub struct AddUserDB {
   pub account_name: String,
   pub password_hash: String,
+}
+
+// sections
+#[derive(Queryable, Serialize, Deserialize)]
+pub struct Section {
+  pub id: i32,
+  pub module: String,
+  pub href: String,
+  pub section_type: String,
+}
+
+#[derive(Insertable)]
+#[table_name="sections"]
+pub struct AddSectionDB {
+  pub module: String,
+  pub href: String,
+  pub section_type: String,
 }

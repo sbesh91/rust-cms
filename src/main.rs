@@ -9,9 +9,25 @@ extern crate dotenv;
 
 pub mod endpoints;
 use dotenv::dotenv;
+use std::process::Command;
 
 fn main() {
     dotenv().ok();
 
+    migrate();
+
     endpoints::run();
+}
+
+fn migrate() {
+    //diesel migration run
+    let output = Command::new("sh")
+        .arg("-c")
+        .arg("./migration.sh")
+        .output()
+        .expect("failed to execute process");
+
+    println!("migration status {}", output.status);
+    println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+    println!("stderr: {}", String::from_utf8_lossy(&output.stderr));
 }

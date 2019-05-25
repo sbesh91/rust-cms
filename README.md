@@ -12,6 +12,10 @@ login sudo -u postgres psql
 
 cargo install diesel_cli --no-default-features --features postgres
 
+diesel migration run
+
+diesel print-schema > src/endpoints/lib/schema.rs
+
 # Set up ENV secret > .env
 SECRET=asdf123
 
