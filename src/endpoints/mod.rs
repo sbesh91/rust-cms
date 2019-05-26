@@ -11,9 +11,13 @@ pub fn run() {
         .mount("/", routes![
             auth::authenticate,
             users::add, users::get,
-            sections::get
+            sections::get, sections::add, sections::put,
         ])
-        .register(catchers![catchers::not_found, catchers::internal_server_error])
+        .register(catchers![
+            catchers::bad_request,
+            catchers::not_found,
+            catchers::internal_server_error,
+        ])
         .launch();
 
     println!("Whoops! Rocket didn't launch!");

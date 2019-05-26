@@ -26,9 +26,9 @@ fn create(add_user: AddUserForm, connection: &PgConnection) -> User {
   };
 
   diesel::insert_into(users::table)
-      .values(&new_user)
-      .get_result(connection)
-      .expect("Error saving new user")
+    .values(&new_user)
+    .get_result(connection)
+    .expect("Error saving new user")
 }
 
 #[get("/users/<id>")]

@@ -7,6 +7,12 @@ pub fn not_found(req: &rocket::Request) -> content::Html<String> {
             req.uri()))
 }
 
+// todo: update this response
+#[catch(400)]
+pub fn bad_request(req: &rocket::Request) -> content::Html<String> {
+  content::Html(format!("<p>Internal Server Error '{}' </p>", req.uri()))
+}
+
 #[catch(500)]
 pub fn internal_server_error(req: &rocket::Request) -> content::Html<String> {
   content::Html(format!("<p>Internal Server Error '{}' </p>", req.uri()))

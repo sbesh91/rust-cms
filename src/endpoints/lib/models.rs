@@ -1,5 +1,5 @@
 use serde::{Serialize, Deserialize};
-use diesel::{Queryable, Insertable};
+use diesel::{Queryable, Insertable, AsChangeset, Identifiable};
 use super::schema::users;
 use super::schema::sections;
 
@@ -58,9 +58,25 @@ pub struct Section {
   pub section_type: String,
 }
 
+#[derive(Deserialize)]
+pub struct AddSectionForm {
+  pub module: String,
+  pub href: String,
+  pub section_type: String,
+}
+
 #[derive(Insertable)]
 #[table_name="sections"]
 pub struct AddSectionDB {
+  pub module: String,
+  pub href: String,
+  pub section_type: String,
+}
+
+#[derive(AsChangeset, Identifiable)]
+#[table_name="sections"]
+pub struct UpdateSectionDB {
+  pub id: i32,
   pub module: String,
   pub href: String,
   pub section_type: String,
