@@ -53,7 +53,7 @@ fn update(update_section: Section, connection: &PgConnection) -> Section {
 
 
 #[get("/sections?<section_type>&<href>")]
-pub fn get(section_type: String, href: String, _key: JWT) -> Json<Vec<Section>> {
+pub fn get(section_type: String, href: String) -> Json<Vec<Section>> {
   let connection = lib::establish_connection();
 
   return Json(find(section_type, href, &connection));
