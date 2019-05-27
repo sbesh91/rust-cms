@@ -12,3 +12,5 @@ COPY . .
 RUN cargo install --path .
 
 CMD ["rust-cms"]
+
+EXPOSE 8000
