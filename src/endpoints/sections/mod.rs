@@ -70,3 +70,18 @@ fn find(section_type: String, href: String, connection: &PgConnection) -> Vec<Se
 
   return results;
 }
+
+#[delete("/sections/<id>")]
+pub fn delete(id: i32, _key: JWT) -> Json<usize> {
+  let connection = lib::establish_connection();
+  
+  return Json(remove(id, &connection));
+}
+
+fn remove(id: i32, connection: &PgConnection) -> usize {
+  let result = diesel::delete(sections::table.filter(sections::id.eq(id)))
+    .execute(connection)
+    .expect("Error removing section");
+    
+  return result;
+}

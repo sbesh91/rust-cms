@@ -11,7 +11,7 @@ pub fn run() {
         .mount("/", routes![
             auth::authenticate,
             users::add, users::get,
-            sections::get, sections::add, sections::put,
+            sections::get, sections::add, sections::put, sections::delete
         ])
         .register(catchers![
             catchers::bad_request,
