@@ -5,7 +5,7 @@ use std::env;
 use user_auth::UserAuth;
 use rocket_contrib::json::Json;
 use bcrypt::{verify};
-use frank_jwt::{Algorithm, encode, decode, validate_signature};
+use frank_jwt::{Algorithm, ValidationOptions, decode, encode, validate_signature};
 use rocket::Outcome;
 use rocket::http::Status;
 use rocket::request::{self, Request, FromRequest};
@@ -20,11 +20,10 @@ pub fn authenticate(auth: Json<UserAuth>) -> String {
   let valid_user = verify(&auth.password, &result.password_hash);
   println!("valid login? {}", valid_user.unwrap());
 
-
   let header = json!({});
   let payload = json!({
     "id": result.id,
-    "account_name": result.account_name, 
+    "account_name": result.account_name
   });
   let secret = env::var("SECRET")
     .expect("SECRET must be set");
@@ -32,10 +31,10 @@ pub fn authenticate(auth: Json<UserAuth>) -> String {
   let jwt = encode(header, &secret, &payload, Algorithm::HS256)
     .expect("JWT generation failed");
 
-  let decoded_jwt = decode(&jwt, &secret, Algorithm::HS256)
+  let (header, payload) = decode(&jwt, &secret, Algorithm::HS256, &ValidationOptions::dangerous())  
     .expect("JWT decoding failed");
 
-  println!("jwt contents: {}, {}", decoded_jwt.0, decoded_jwt.1);
+  println!("jwt contents: {}, {}", header, payload);
 
   let valid_jwt = validate_authorization(&jwt);
 
