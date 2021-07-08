@@ -9,7 +9,7 @@ json = 5242880
 
 [dependencies]
 chrono = "0.4"
-rocket = "0.4.1"
+rocket = "0.4.10"
 serde = { version = "1.0.91", features = ["derive"] }
 serde_json = "1.0.39"
 log = "0.4.6"
